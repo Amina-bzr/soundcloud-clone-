@@ -32,12 +32,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List _pages = <Widget>[
-    Home(),
-    NotificationPage(),
-    NotificationPage(),
-    Home()
-  ];
+  List _pages = <Widget>[Home(), Stream(), NotificationPage(), Home()];
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -132,6 +127,202 @@ class Home extends StatelessWidget {
             Recent(),
             Recent(),
           ]),
+        )
+      ],
+    );
+  }
+}
+
+class Stream extends StatelessWidget {
+  const Stream({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(slivers: [
+      const SliverAppBar(
+        pinned: true,
+        expandedHeight: 110.0,
+        flexibleSpace: FlexibleSpaceBar(
+          title: Text('Stream'),
+        ),
+      ),
+      SliverList(
+        delegate: SliverChildListDelegate([
+          TrackStream(
+              username: "User1",
+              avatar: "avatar1.png",
+              thumbnail: "22.jpg",
+              title: "Taylor Swift - 22"),
+          TrackStream(
+              username: "User2",
+              avatar: "avatar2.jpg",
+              thumbnail: "12stones.jpg",
+              title: "12stones - World So Cold"),
+          TrackStream(
+              username: "User3",
+              avatar: "avatar2.jpg",
+              thumbnail: "12stones.jpg",
+              title: "12stones - World So Cold"),
+          TrackStream(
+              username: "User4",
+              avatar: "avatar1.png",
+              thumbnail: "arianaGrande.jpg",
+              title: "Ariana Grande - No Tears Left To Cry"),
+          TrackStream(
+              username: "User5",
+              avatar: "avatar1.png",
+              thumbnail: "arianaGrande.jpg",
+              title: "Ariana Grande - No Tears Left To Cry"),
+        ]),
+      )
+    ]);
+  }
+}
+
+class TrackStream extends StatelessWidget {
+  TrackStream(
+      {Key? key,
+      required this.username,
+      required this.avatar,
+      required this.thumbnail,
+      required this.title})
+      : super(key: key);
+  String avatar, username, thumbnail, title;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+        onTap: () {},
+        child: Ink(
+          padding: const EdgeInsets.all(60.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                      child: Image(
+                    image: AssetImage("../images/$avatar"),
+                  )),
+                  const SizedBox(
+                    width: 7.0,
+                  ),
+                  Text(username),
+                  const Text(" posted a track . n months ago"),
+                ],
+              ),
+              const SizedBox(
+                height: 10.0,
+              ),
+              Stack(
+                children: [
+                  Container(
+                      constraints: const BoxConstraints(
+                        minWidth: 370,
+                        minHeight: 370,
+                      ),
+                      child: Image(
+                          fit: BoxFit.cover,
+                          image: AssetImage("../images/$thumbnail"))),
+                  Positioned(
+                      bottom: 25,
+                      left: 25,
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              " $title ",
+                              style: const TextStyle(
+                                  backgroundColor: Colors.black,
+                                  color: Colors.white,
+                                  fontSize: 20),
+                            ),
+                            Text(" $username ",
+                                textAlign: TextAlign.start,
+                                style: const TextStyle(
+                                    backgroundColor: Colors.black,
+                                    color: Colors.white,
+                                    fontSize: 20)),
+                            const Text(" 21633 ",
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                    backgroundColor: Colors.black,
+                                    color: Colors.white,
+                                    fontSize: 20)),
+                          ] //views
+                          ))
+                ],
+              ),
+              const LikesRepost(),
+            ],
+          ),
+        ));
+  }
+}
+
+class LikesRepost extends StatefulWidget {
+  const LikesRepost({Key? key}) : super(key: key);
+
+  @override
+  State<LikesRepost> createState() => _LikesRepostState();
+}
+
+class _LikesRepostState extends State<LikesRepost> {
+  int _likes = 0; //underscore for privacy
+  int _reposts = 0;
+  bool _liked = false;
+  bool _reposted = false;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+              icon: _liked
+                  ? const Icon(
+                      Icons.thumb_up_alt,
+                      color: Colors.orange,
+                    )
+                  : const Icon(Icons.thumb_up_alt_outlined),
+              onPressed: () {
+                setState(() {
+                  _liked ? _likes -= 1 : _likes += 1;
+                  _liked = !_liked;
+                });
+              },
+            ),
+            Text(_likes.toString()),
+          ],
+        ),
+        const SizedBox(
+          width: 10.0,
+        ),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    _reposted ? _reposts -= 1 : _reposts += 1;
+                    _reposted = !_reposted;
+                  });
+                },
+                icon: _reposted
+                    ? const Icon(
+                        Icons.share,
+                        color: Colors.orange,
+                      )
+                    : const Icon(
+                        Icons.share_outlined,
+                      )),
+            Text(_reposts.toString()),
+          ],
         )
       ],
     );
