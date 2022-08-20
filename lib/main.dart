@@ -32,7 +32,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List _pages = <Widget>[Home(), Stream(), NotificationPage(), Home()];
+  List _pages = <Widget>[
+    const Home(),
+    const Stream(),
+    const NotificationPage(),
+    const Home()
+  ];
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
@@ -60,13 +65,12 @@ class _HomePageState extends State<HomePage> {
               activeIcon: Icon(Icons.home)),
           BottomNavigationBarItem(
             label: "Stream",
-            icon: Icon(Icons.thunderstorm_outlined),
-            activeIcon: Icon(Icons.thunderstorm),
+            icon: Icon(Icons.flash_on),
           ),
           BottomNavigationBarItem(
-              label: "Search",
-              icon: Icon(Icons.screen_search_desktop_outlined),
-              activeIcon: Icon(Icons.screen_search_desktop_rounded)),
+            label: "Search",
+            icon: Icon(Icons.search),
+          ),
           BottomNavigationBarItem(
               label: "Library",
               icon: Icon(Icons.library_music_outlined),
@@ -174,7 +178,7 @@ class Stream extends StatelessWidget {
               thumbnail: "arianaGrande.jpg",
               title: "Ariana Grande - No Tears Left To Cry"),
         ]),
-      )
+      ),
     ]);
   }
 }
@@ -244,17 +248,45 @@ class TrackStream extends StatelessWidget {
                                     backgroundColor: Colors.black,
                                     color: Colors.white,
                                     fontSize: 20)),
-                            const Text(" 21633 ",
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    backgroundColor: Colors.black,
-                                    color: Colors.white,
-                                    fontSize: 20)),
+                            Container(
+                              color: Colors.black,
+                              child: Row(
+                                children: const [
+                                  Icon(Icons.play_arrow),
+                                  Text(" 21633 ",
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 20)),
+                                ],
+                              ),
+                            ),
                           ] //views
                           ))
                 ],
               ),
-              const LikesRepost(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const LikesRepost(),
+                  IconButton(
+                    highlightColor: Colors.transparent,
+                    splashColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {
+                      showModalBottomSheet<dynamic>(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return TrackMore(
+                                title: title,
+                                username: username,
+                                avatar: avatar);
+                          });
+                    },
+                  )
+                ],
+              ),
             ],
           ),
         ));
@@ -276,13 +308,15 @@ class _LikesRepostState extends State<LikesRepost> {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              hoverColor: Colors.transparent,
               icon: _liked
                   ? const Icon(
                       Icons.thumb_up_alt,
@@ -307,6 +341,9 @@ class _LikesRepostState extends State<LikesRepost> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                hoverColor: Colors.transparent,
                 onPressed: () {
                   setState(() {
                     _reposted ? _reposts -= 1 : _reposts += 1;
@@ -322,6 +359,149 @@ class _LikesRepostState extends State<LikesRepost> {
                         Icons.share_outlined,
                       )),
             Text(_reposts.toString()),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class TrackMore extends StatelessWidget {
+  TrackMore({
+    Key? key,
+    required this.avatar,
+    required this.title,
+    required this.username,
+  }) : super(key: key);
+
+  String avatar;
+  String title;
+  String username;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListTile(
+          leading: CircleAvatar(
+              child: Image(
+                  fit: BoxFit.contain, image: AssetImage("../images/$avatar"))),
+          title: Text(title),
+          subtitle: Text(username),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Row(
+          children: [
+            InkWell(
+                onTap: () {},
+                child: Ink(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.copy,
+                        size: 45,
+                      ),
+                      Text("Copy Link")
+                    ],
+                  ),
+                )),
+            InkWell(
+                onTap: () {},
+                child: Ink(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.facebook,
+                        size: 45,
+                      ),
+                      Text("Messenger")
+                    ],
+                  ),
+                )),
+            InkWell(
+                onTap: () {},
+                child: Ink(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.sms_outlined,
+                        size: 45,
+                      ),
+                      Text("SMS")
+                    ],
+                  ),
+                )),
+            InkWell(
+                onTap: () {},
+                child: Ink(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    children: const [
+                      Icon(
+                        Icons.more_horiz,
+                        size: 45,
+                      ),
+                      Text("More")
+                    ],
+                  ),
+                )),
+          ],
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        Column(
+          children: [
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.favorite_outline),
+                    title: Text("Like"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.playlist_add),
+                    title: Text("Add to playlist"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.playlist_play),
+                    title: Text("Add to next up"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.read_more_outlined),
+                    title: Text("Repost on Soundcloud"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.sensors),
+                    title: Text("Start station"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.person_outline),
+                    title: Text("Go to artist profile"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.waves_outlined),
+                    title: Text("Behind this track"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.comment_outlined),
+                    title: Text("View comments"))),
+            InkWell(
+                onTap: () {},
+                child: const ListTile(
+                    leading: Icon(Icons.flag_outlined), title: Text("Report"))),
           ],
         )
       ],
